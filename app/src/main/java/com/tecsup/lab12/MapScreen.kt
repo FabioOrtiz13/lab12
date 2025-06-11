@@ -21,25 +21,43 @@ import com.google.maps.android.compose.rememberMarkerState
 fun MapScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val arequipaLocation = LatLng(-16.4040102, -71.559611)
+
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(arequipaLocation, 12f)
     }
+
+    val locations = listOf(
+        LatLng(-16.433415, -71.5442652), // JLByR
+        LatLng(-16.4205151, -71.4945209), // Paucarpata
+        LatLng(-16.3524187, -71.5675994)  // Zamacola
+    )
 
     Box(modifier = modifier.fillMaxSize()) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState
         ) {
+            // Marcador personalizado principal (Arequipa)
             Marker(
                 state = rememberMarkerState(position = arequipaLocation),
-                icon = bitmapDescriptorFromVector(context, R.drawable.montana), // ← imagen personalizada
+                icon = bitmapDescriptorFromVector(context, R.drawable.montana),
                 title = "Arequipa, Perú"
             )
+
+            // Marcadores secundarios
+            locations.forEach { location ->
+                Marker(
+                    state = rememberMarkerState(position = location),
+                    title = "Ubicación",
+                    snippet = "Punto de interés"
+                )
+            }
         }
     }
 }
 
 fun bitmapDescriptorFromVector(context: Context, resId: Int): BitmapDescriptor {
-    val bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, resId)
-    return BitmapDescriptorFactory.fromBitmap(bitmap)
+    val original = BitmapFactory.decodeResource(context.resources, resId)
+    val scaled = Bitmap.createScaledBitmap(original, 96, 96, false)
+    return BitmapDescriptorFactory.fromBitmap(scaled)
 }
