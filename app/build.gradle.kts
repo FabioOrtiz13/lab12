@@ -70,3 +70,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 }
 
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
+}
